@@ -526,7 +526,7 @@
         <span id="music-status-text">Muted</span>
       </button>
       <button id="song-switch-btn" class="music-btn song-switch-btn" title="Switch Song">
-        <span id="song-title-tag">Jaan Ho Meri ⇄</span>
+        <span id="song-title-tag">Aise Kaise Jaane Doon ⇄</span>
       </button>
     </div>
 
@@ -730,7 +730,7 @@
     <!-- AUDIO ELEMENT (Plays Johnny Stimson - Flower) -->
     <!-- AUDIO ELEMENT (Plays Johnny Stimson - Flower) -->
     <!-- AUDIO ELEMENT (Plays Johnny Stimson - Flower) -->
-    <audio id="bg-music" src="assets/jaan_ho_meri.mp3" loop preload="auto"></audio>
+    <audio id="bg-music" src="assets/aise_kaise_jaane_doon.mp3" loop preload="auto"></audio>
 
     <script>
       /* ═════════════════════════════════════════════════
@@ -904,6 +904,7 @@
          STAGE 2: AUDIO CONTROLS & MUTE OPTIONS
       ══════════════════════════════════════════════════ */
       const SONGS = [
+        { title: 'Aise Kaise Jaane Doon ⇄', src: 'assets/aise_kaise_jaane_doon.mp3' },
         { title: 'Jaan Ho Meri ⇄', src: 'assets/jaan_ho_meri.mp3' },
         { title: 'Flower (Johnny Stimson) ⇄', src: 'assets/flower_stimson.mp3' },
         { title: 'Acoustic ⇄', src: 'assets/music.mp3' }
@@ -1278,10 +1279,6 @@
             if (b.classList.contains('popped')) return;
             playBubblePopSound();
             b.classList.add('popped');
-          };
-          wrap.appendChild(b);
-        }
-      }, 140);
           };
           wrap.appendChild(b);
         }
