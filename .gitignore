@@ -1,0 +1,5 @@
+frames_highness/
+*.py
+*.pyc
+__pycache__/
+.DS_Store

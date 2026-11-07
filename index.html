@@ -1,0 +1,1257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <link rel="stylesheet" href="css2.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="assets/app.css" />
+
+    <title>For Highness 👑 · Open When Letters</title>
+    <meta name="description" content="A special virtual gift & open-when letters for Highness." />
+
+    <style>
+      /* ─── FLOATING MUSIC PILL ─── */
+      .music-pill {
+        position: fixed;
+        top: max(14px, env(safe-area-inset-top));
+        right: 14px;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(128, 0, 0, 0.2);
+        border-radius: 9999px;
+        box-shadow: 0 4px 20px rgba(128, 0, 0, 0.16);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        padding: 4px 8px;
+        transition: all 0.25s ease;
+      }
+      .music-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 9px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.74rem;
+        font-weight: 700;
+        color: #800000;
+        border-radius: 9999px;
+      }
+      .music-btn:active { transform: scale(0.95); }
+      .song-switch-btn {
+        border-left: 1px solid rgba(128, 0, 0, 0.15);
+        padding-left: 8px;
+        font-size: 0.7rem;
+        color: #a0522d;
+      }
+
+      /* ─── ULTRA-SMOOTH OPEN WHEN ZONE ─── */
+      #open-when-zone {
+        display: none;
+        opacity: 0;
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        background: radial-gradient(circle at center, #fff4f7 0%, #fde7ee 50%, #fbd8e2 100%);
+        padding: 24px 14px 70px;
+        box-sizing: border-box;
+        transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translateY(30px);
+      }
+      #open-when-zone.active {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      #open-when-zone.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Mac Window Outer Frame */
+      .mac-window {
+        width: 100%;
+        max-width: 640px;
+        background: #fff;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 143, 177, 0.45);
+        box-shadow: 0 20px 60px rgba(180, 50, 90, 0.16), 0 0 1px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .mac-titlebar {
+        height: 38px;
+        background: #fce7ee;
+        border-bottom: 1px solid rgba(255, 143, 177, 0.35);
+        display: flex;
+        align-items: center;
+        padding: 0 14px;
+        gap: 8px;
+      }
+      .mac-dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+      }
+      .dot-red { background: #ff5f56; }
+      .dot-yellow { background: #ffbd2e; }
+      .dot-green { background: #27c93f; }
+      .mac-title-text {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.74rem;
+        font-weight: 600;
+        color: #8b3a55;
+        margin-left: 6px;
+        letter-spacing: 0.04em;
+      }
+
+      /* Window Gingham Canvas */
+      .window-canvas {
+        background: repeating-linear-gradient(0deg, rgba(255, 192, 203, 0.16) 0px, rgba(255, 192, 203, 0.16) 20px, transparent 20px, transparent 40px),
+                    repeating-linear-gradient(90deg, rgba(255, 192, 203, 0.16) 0px, rgba(255, 192, 203, 0.16) 20px, #fff9fb 20px, #fff9fb 40px);
+        min-height: 490px;
+        padding: 24px 16px 36px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Corner decorative flowers */
+      .deco-corner-flower {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        width: 58px;
+        height: auto;
+        pointer-events: none;
+        filter: drop-shadow(0 4px 10px rgba(180, 50, 90, 0.15));
+      }
+
+      /* Torn Paper Card in Center */
+      .paper-card {
+        width: 100%;
+        max-width: 480px;
+        background: #fffdfd;
+        border: 2px dashed rgba(255, 143, 177, 0.65);
+        border-radius: 22px;
+        box-shadow: 0 10px 30px rgba(180, 50, 90, 0.1);
+        padding: 28px 20px 24px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        min-height: 250px;
+        transition: opacity 0.35s ease, transform 0.35s ease;
+      }
+
+      .paper-script-heading {
+        font-family: 'Dancing Script', cursive;
+        font-size: clamp(2.3rem, 6.5vw, 3.1rem);
+        color: #9c2e4f;
+        margin: 0 0 10px;
+        line-height: 1.2;
+      }
+
+      /* Live Object Characters (Replaced raw emojis) */
+      .live-character-box {
+        margin: 10px 0 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 95px;
+      }
+      .live-character-img {
+        max-height: 105px;
+        width: auto;
+        filter: drop-shadow(0 6px 14px rgba(180, 50, 90, 0.15));
+        transition: transform 0.25s ease;
+      }
+      .live-character-img:hover {
+        transform: scale(1.05);
+      }
+
+      /* Buttons */
+      .ow-btn-row {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        align-items: center;
+      }
+      .ow-pill-btn {
+        background: #fff;
+        border: 1.5px solid #d46b87;
+        color: #8b2844;
+        font-family: 'Caveat', cursive;
+        font-size: 1.5rem;
+        font-weight: 700;
+        padding: 4px 26px;
+        border-radius: 9999px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(180, 50, 90, 0.12);
+        transition: all 0.2s ease;
+      }
+      .ow-pill-btn:active {
+        transform: scale(0.95);
+        background: #ffe8ee;
+      }
+      .ow-pill-btn.no-runaway {
+        position: relative;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      /* ─── ENVELOPES GRID ─── */
+      .envelopes-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        width: 100%;
+        max-width: 460px;
+        margin-top: 14px;
+      }
+      @media(min-width: 480px) {
+        .envelopes-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .env-card {
+        background: #731e36;
+        border: 1.5px solid #9c2e4f;
+        border-radius: 14px;
+        padding: 12px 8px 14px;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: 0 8px 22px rgba(115, 30, 54, 0.26);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 105px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+      .env-card:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 12px 28px rgba(115, 30, 54, 0.35);
+      }
+      .env-card:active {
+        transform: scale(0.96);
+      }
+      .env-tag {
+        font-family: 'Caveat', cursive;
+        font-size: 0.95rem;
+        color: #ffccd5;
+        margin-bottom: 3px;
+      }
+      .env-label {
+        font-family: 'Caveat', cursive;
+        font-size: 1.18rem;
+        color: #fff;
+        line-height: 1.25;
+        font-weight: 700;
+        background: rgba(0, 0, 0, 0.18);
+        border-radius: 6px;
+        padding: 3px 6px;
+        width: 100%;
+      }
+      .env-seal-img {
+        width: 22px;
+        height: auto;
+        margin-top: 5px;
+        filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+      }
+
+      /* ─── ACTIVE OPENED LETTER VIEW ─── */
+      .letter-view-wrap {
+        width: 100%;
+        max-width: 520px;
+        background: #fff;
+        border-radius: 20px;
+        padding: 24px 20px;
+        box-shadow: 0 15px 45px rgba(180, 50, 90, 0.16);
+        position: relative;
+        text-align: left;
+        margin-top: 10px;
+      }
+      .letter-view-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1.5px dashed rgba(255, 143, 177, 0.55);
+        padding-bottom: 10px;
+        margin-bottom: 14px;
+      }
+      .letter-topic-title {
+        font-family: 'Dancing Script', cursive;
+        font-size: 1.75rem;
+        color: #8b2844;
+        margin: 0;
+      }
+      .letter-back-btn {
+        background: #fce7ee;
+        border: 1px solid #d46b87;
+        border-radius: 9999px;
+        padding: 4px 14px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.74rem;
+        font-weight: 700;
+        color: #8b2844;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      .letter-back-btn:active {
+        background: #ffd3e0;
+      }
+      .letter-prose {
+        font-family: 'Caveat', cursive;
+        font-size: 1.35rem;
+        line-height: 1.65;
+        color: #4a1926;
+        margin-bottom: 16px;
+      }
+      .letter-bottom-art {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px dashed rgba(255, 143, 177, 0.4);
+        padding-top: 12px;
+        margin-top: 16px;
+      }
+      .letter-sign {
+        font-family: 'Dancing Script', cursive;
+        font-size: 1.55rem;
+        color: #8b2844;
+        line-height: 1.25;
+      }
+
+      /* ─── GAMES HUB (3 FEEL-GOOD GAMES) ─── */
+      .games-hub-box {
+        margin-top: 16px;
+        background: #fff6f9;
+        border: 1px solid rgba(255, 143, 177, 0.5);
+        border-radius: 18px;
+        padding: 16px 14px;
+        text-align: center;
+      }
+      .games-tabs-bar {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+      .game-tab-btn {
+        background: #fff;
+        border: 1px solid rgba(255, 143, 177, 0.4);
+        border-radius: 9999px;
+        padding: 5px 12px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #8b2844;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .game-tab-btn.active {
+        background: #8b2844;
+        color: #fff;
+        border-color: #8b2844;
+      }
+
+      .game-panel {
+        display: none;
+      }
+      .game-panel.active {
+        display: block;
+      }
+
+      /* Game 1: Arena */
+      .ow-arena {
+        width: 100%;
+        height: 220px;
+        background: #fffcf5;
+        border: 1.5px dashed #d4af37;
+        border-radius: 16px;
+        position: relative;
+        overflow: hidden;
+        touch-action: none;
+      }
+      .live-falling-target {
+        position: absolute;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .live-falling-target img {
+        width: 100%;
+        height: auto;
+        filter: drop-shadow(0 3px 6px rgba(0,0,0,0.15));
+      }
+
+      /* Game 2: Memory Match */
+      .memory-match-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        max-width: 320px;
+        margin: 10px auto;
+      }
+      .mem-tile {
+        aspect-ratio: 1;
+        background: #fff;
+        border: 1.5px solid rgba(255, 143, 177, 0.5);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 3px 8px rgba(180, 50, 90, 0.08);
+        transition: transform 0.2s ease;
+      }
+      .mem-tile img {
+        width: 65%;
+        height: auto;
+        display: none;
+      }
+      .mem-tile.revealed {
+        background: #fff2f6;
+        border-color: #d46b87;
+      }
+      .mem-tile.revealed img {
+        display: block;
+      }
+      .mem-tile.matched {
+        background: #eefbee;
+        border-color: #52c41a;
+        opacity: 0.7;
+        pointer-events: none;
+      }
+      .mem-tile.matched img {
+        display: block;
+      }
+
+      /* Game 3: Bubble Pop */
+      .bubble-wrap-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin: 12px 0 8px;
+      }
+      .bubble-pearl {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, #ffffff, #ffe0e9 60%, #ffd1dc 100%);
+        border: 1px solid rgba(255, 143, 177, 0.5);
+        box-shadow: inset 0 2px 4px #fff, 0 3px 8px rgba(128, 0, 0, 0.08);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        transition: transform 0.12s ease, opacity 0.15s ease;
+      }
+      .bubble-pearl:active { transform: scale(0.85); }
+      .bubble-pearl.popped {
+        background: rgba(128, 0, 0, 0.04);
+        border-color: rgba(128, 0, 0, 0.08);
+        box-shadow: none;
+        transform: scale(0.9);
+        opacity: 0.25;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- FLOATING MUSIC & MUTE CONTROL -->
+    <div id="music-control-pill" class="music-pill">
+      <button id="mute-btn" class="music-btn" aria-label="Toggle Mute / Music">
+        <span id="music-icon">🔇</span>
+        <span id="music-status-text">Muted</span>
+      </button>
+      <button id="song-switch-btn" class="music-btn song-switch-btn" title="Switch Song">
+        <span id="song-title-tag">Yellow ⇄</span>
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════
+         STAGE 1: THE GRAND GIFT BOX & ROSE BLOOM INTRO
+    ══════════════════════════════════════════════════ -->
+    <div id="gift-landing">
+      <div class="gift-fade-veil" aria-hidden="true"></div>
+      <div class="gift-stage">
+        <div class="gift-click-wrap">
+          <button id="gift-box-btn" class="gift-box-btn" aria-label="Open your gift">
+            <img src="assets/giftbox.png" alt="" width="320" height="320" />
+          </button>
+          <p class="gift-caption">For you, Highness.</p>
+          <p class="gift-hint">(tap to open)</p>
+        </div>
+        <div id="bloom-field" class="bloom-field" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════
+         STAGE 2: THE "OPEN WHEN" INTERACTIVE EXPERIENCE
+    ══════════════════════════════════════════════════ -->
+    <div id="open-when-zone">
+      <div class="mac-window">
+        <!-- Mac Window Titlebar -->
+        <div class="mac-titlebar">
+          <div class="mac-dot dot-red"></div>
+          <div class="mac-dot dot-yellow"></div>
+          <div class="mac-dot dot-green"></div>
+          <span class="mac-title-text">For Highness · Open When</span>
+        </div>
+
+        <!-- Window Content Area -->
+        <div class="window-canvas">
+          <img src="assets/photos/rose.png" class="deco-corner-flower" alt="" />
+
+          <!-- STEP A: "I made something for you" -->
+          <div class="paper-card" id="step-intro" style="display: flex;">
+            <h2 class="paper-script-heading">I made<br/>something for you</h2>
+            <div class="live-character-box">
+              <img src="assets/stickers/clean_cat_what.png" class="live-character-img" alt="Cute kitten" />
+            </div>
+            <div class="ow-btn-row">
+              <button class="ow-pill-btn" onclick="goToStep('willyou')">what?</button>
+            </div>
+          </div>
+
+          <!-- STEP B: "Will you see it?" -->
+          <div class="paper-card" id="step-willyou" style="display: none;">
+            <h2 class="paper-script-heading">Will you see it?</h2>
+            <div class="live-character-box">
+              <img src="assets/stickers/clean_bears_flowers.png" class="live-character-img" alt="Bears with flowers" />
+            </div>
+            <div class="ow-btn-row">
+              <button class="ow-pill-btn" onclick="goToStep('ready')">yes</button>
+              <button class="ow-pill-btn no-runaway" id="no-btn" onclick="onNoClick()">no</button>
+            </div>
+          </div>
+
+          <!-- STEP B-ALT: "please say yes!" -->
+          <div class="paper-card" id="step-please" style="display: none;">
+            <h2 class="paper-script-heading">please say yes! 🥺</h2>
+            <div class="live-character-box">
+              <img src="assets/stickers/clean_cat_sad.png" class="live-character-img" alt="Crying kitten" />
+            </div>
+            <div class="ow-btn-row">
+              <button class="ow-pill-btn" onclick="goToStep('ready')">fine 💖</button>
+            </div>
+          </div>
+
+          <!-- STEP C: "YAY are you ready for the surprise?" -->
+          <div class="paper-card" id="step-ready" style="display: none;">
+            <p style="font-family:'Caveat',cursive; font-size:1.6rem; color:#8b2844; margin:0;">yay</p>
+            <h2 class="paper-script-heading" style="margin-top:0;">are you ready for the surprise?</h2>
+            <div class="live-character-box">
+              <img src="assets/stickers/clean_bears_yay.png" class="live-character-img" alt="Dancing happy bears" />
+            </div>
+            <div class="ow-btn-row">
+              <button class="ow-pill-btn" onclick="goToStep('envelopes')">yes!! 💖</button>
+            </div>
+          </div>
+
+          <!-- STEP D: THE 6 "OPEN WHEN" ENVELOPES -->
+          <div id="step-envelopes" style="display: none; width:100%; flex-direction:column; align-items:center;">
+            <p style="font-family:'Dancing Script',cursive; font-size:2.2rem; color:#8b2844; margin:0 0 10px; text-align:center;">
+              Pick an envelope, Highness:
+            </p>
+
+            <div class="envelopes-grid">
+              <!-- Envelope 1 -->
+              <div class="env-card" onclick="openEnvelope('bored')">
+                <span class="env-tag">open when</span>
+                <span class="env-label">you're bored</span>
+                <img src="assets/flowers/flower-1.png" class="env-seal-img" alt="Rose seal" />
+              </div>
+
+              <!-- Envelope 2 -->
+              <div class="env-card" onclick="openEnvelope('overthinking')">
+                <span class="env-tag">open when</span>
+                <span class="env-label">you're overthinking</span>
+                <img src="assets/stickers/crown.png" class="env-seal-img" alt="Crown seal" />
+              </div>
+
+              <!-- Envelope 3 -->
+              <div class="env-card" onclick="openEnvelope('far')">
+                <span class="env-tag">open when</span>
+                <span class="env-label">you're far from home</span>
+                <img src="assets/flowers/flower-2.png" class="env-seal-img" alt="Rose seal" />
+              </div>
+
+              <!-- Envelope 4 -->
+              <div class="env-card" onclick="openEnvelope('hug')">
+                <span class="env-tag">open when</span>
+                <span class="env-label">you need a hug</span>
+                <img src="assets/stickers/heart.png" class="env-seal-img" alt="Heart seal" />
+              </div>
+
+              <!-- Envelope 5 -->
+              <div class="env-card" onclick="openEnvelope('smile')">
+                <span class="env-tag">open when</span>
+                <span class="env-label">you want to smile</span>
+                <img src="assets/flowers/flower-3.png" class="env-seal-img" alt="Rose seal" />
+              </div>
+
+              <!-- Envelope 6 (Bonus Final Note) -->
+              <div class="env-card" onclick="openEnvelope('final')" style="background:#521425;">
+                <span class="env-tag">read last</span>
+                <span class="env-label">a small promise</span>
+                <img src="assets/stickers/crown.png" class="env-seal-img" alt="Crown seal" />
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP E: ACTIVE LETTER MODAL -->
+          <div class="letter-view-wrap" id="step-letter" style="display: none;">
+            <div class="letter-view-header">
+              <h3 class="letter-topic-title" id="letterTopic">Open When...</h3>
+              <button class="letter-back-btn" onclick="backToEnvelopes()">‹ Envelopes</button>
+            </div>
+
+            <div class="letter-prose" id="letterContent">
+              <!-- Dynamic letter text injected here -->
+            </div>
+
+            <!-- FEEL-GOOD GAMES HUB (3 GAMES) -->
+            <div class="games-hub-box" id="letterGameBox" style="display: none;">
+              <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.75rem; font-weight:700; color:#800000; text-transform:uppercase; margin-bottom:8px;">
+                ✦ Royal Boredom Banisher Hub ✦
+              </div>
+
+              <!-- Game Selector Tabs -->
+              <div class="games-tabs-bar">
+                <button class="game-tab-btn active" onclick="switchGameTab('catcher')">⭐ Catch Targets</button>
+                <button class="game-tab-btn" onclick="switchGameTab('memory')">🃏 Memory Match</button>
+                <button class="game-tab-btn" onclick="switchGameTab('bubbles')">🫧 Bubble Pop</button>
+              </div>
+
+              <!-- Game 1: Star/Rose Catcher -->
+              <div class="game-panel active" id="gamePanelCatcher">
+                <div style="display:flex; justify-content:space-around; font-size:0.8rem; font-weight:700; color:#800000; margin-bottom:10px;">
+                  <span>Score: <span id="ow-score" style="color:#d4af37;">0</span> ✨</span>
+                  <span>Time: <span id="ow-timer">25</span>s</span>
+                </div>
+                <div id="ow-arena" class="ow-arena">
+                  <div id="ow-cover" style="position:absolute; inset:0; background:rgba(255,245,248,0.92); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                    <img src="assets/stickers/clean_bears_yay.png" style="height:65px; width:auto; margin-bottom:6px;" alt="" />
+                    <button class="ow-pill-btn" onclick="startLetterGame()" style="font-size:1rem; padding:4px 20px;">Start Game 🚀</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Game 2: Memory Match -->
+              <div class="game-panel" id="gamePanelMemory">
+                <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:700; color:#800000; padding:0 6px 6px;">
+                  <span>Find all 6 pairs!</span>
+                  <button onclick="initMemoryGame()" style="background:none; border:none; color:#8b2844; font-size:0.75rem; font-weight:700; cursor:pointer; text-decoration:underline;">Reset</button>
+                </div>
+                <div class="memory-match-grid" id="memoryGrid"></div>
+              </div>
+
+              <!-- Game 3: Bubble Pop -->
+              <div class="game-panel" id="gamePanelBubbles">
+                <p style="font-family:'Caveat',cursive; font-size:1.15rem; color:#800000; margin:0 0 4px;">Zero-Stress Bubble Pop 🫧</p>
+                <div class="bubble-wrap-row" id="ow-bubbles"></div>
+                <button class="ow-pill-btn" onclick="initBubbleGrid()" style="font-size:0.85rem; padding:2px 14px; margin-top:6px;">Replenish 🫧</button>
+              </div>
+            </div>
+
+            <!-- Letter Bottom Signature with Live Illustrated Bears -->
+            <div class="letter-bottom-art">
+              <span class="letter-sign">Always in your corner,<br/>Your Loyal Subject</span>
+              <img src="assets/stickers/clean_bears_cuddle.png" style="height:60px; width:auto;" alt="Cuddling bears" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDIO ELEMENT (Plays Coldplay "Yellow" from Highness.mp4) -->
+        <!-- AUDIO ELEMENT (Plays Coldplay Yellow from Highness.mp4) -->
+        <!-- AUDIO ELEMENT (Plays Coldplay Yellow from Highness.mp4) -->
+    <audio id="bg-music" src="Highness.mp4" loop preload="auto"></audio>
+
+    <script>
+      /* ═════════════════════════════════════════════════
+         STAGE 1: FLOWER BLOOM & SILKY CURTAIN VANISH
+      ══════════════════════════════════════════════════ */
+      const FLOWER_CYCLE = [
+        'assets/flowers/flower-1.png',
+        'assets/flowers/flower-2.png',
+        'assets/flowers/flower-3.png',
+        'assets/flowers/flower-1.png',
+        'assets/flowers/flower-2.png',
+        'assets/flowers/flower-3.png'
+      ];
+      let flowerIdCounter = 0;
+
+      function spawnFlower(opts, bloomField) {
+        const img = document.createElement('img');
+        img.src = FLOWER_CYCLE[flowerIdCounter % FLOWER_CYCLE.length];
+        img.alt = '';
+        img.className = 'bloom-flower in';
+        img.loading = 'eager';
+        img.draggable = false;
+        img.style.width = opts.size + 'px';
+        img.style.height = opts.size + 'px';
+        img.style.setProperty('--fx', (opts.x - opts.size / 2) + 'px');
+        img.style.setProperty('--fy', (opts.y - opts.size / 2) + 'px');
+        img.style.setProperty('--fall', opts.fallDist.toFixed(0) + 'px');
+        img.style.setProperty('--sway1', opts.sway1.toFixed(1) + 'px');
+        img.style.setProperty('--sway2', opts.sway2.toFixed(1) + 'px');
+        img.style.setProperty('--rot-start', opts.startRot.toFixed(1) + 'deg');
+        img.style.setProperty('--rot-end', opts.restRot.toFixed(1) + 'deg');
+        img.style.setProperty('--ldelay', opts.launchDelay.toFixed(2) + 's');
+        img.style.setProperty('--rdur', opts.rdur.toFixed(2) + 's');
+        img.style.setProperty('--dur', opts.floatDur.toFixed(2) + 's');
+        img.style.setProperty('--fdelay', opts.floatDelay.toFixed(2) + 's');
+        img.dataset.x = opts.x;
+        img.dataset.y = opts.y;
+        bloomField.appendChild(img);
+        flowerIdCounter++;
+        return img;
+      }
+
+      function startGiftCascade() {
+        const giftLanding = document.getElementById('gift-landing');
+        const bloomField = document.getElementById('bloom-field');
+        const openWhenZone = document.getElementById('open-when-zone');
+
+        if (!giftLanding || giftLanding.classList.contains('state-bloom')) return;
+        giftLanding.classList.add('state-bloom');
+
+        // Play audio quietly (starts muted by default as requested)
+        playAudioSilentlyOrActive();
+
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const isMobile = Math.min(w, h) < 640;
+        const desiredCount = isMobile ? 180 : 340;
+        const hardCap = isMobile ? 240 : 480;
+        const rainWindow = isMobile ? 2200 : 2800;
+        const speedMin = isMobile ? 210 : 240;
+        const speedRange = isMobile ? 90 : 130;
+
+        let spacing = Math.sqrt((w * h) / desiredCount);
+        spacing = Math.max(18, Math.min(72, spacing));
+
+        const baseSize = isMobile ? 84 : 120;
+        const sizeVar = isMobile ? 42 : 64;
+
+        let cells = [];
+        for (let gy = -spacing; gy < h + spacing; gy += spacing) {
+          for (let gx = -spacing; gx < w + spacing; gx += spacing) {
+            cells.push({
+              x: gx + (Math.random() - 0.5) * spacing * 0.85,
+              y: gy + (Math.random() - 0.5) * spacing * 0.85
+            });
+          }
+        }
+
+        if (cells.length > hardCap) {
+          const stride = Math.ceil(cells.length / hardCap);
+          cells = cells.filter((_, i) => i % stride === 0);
+        }
+
+        let maxFinish = 0;
+
+        cells.forEach((c) => {
+          const size = baseSize + Math.random() * sizeVar;
+          const restRot = Math.random() * 32 - 16;
+          const startRot = (Math.random() < 0.5 ? -1 : 1) * (28 + Math.random() * 35);
+
+          const fallDist = c.y + size + 90 + Math.random() * 260;
+          const speed = speedMin + Math.random() * speedRange;
+          const rdur = fallDist / speed;
+          const launchDelay = Math.random() * (rainWindow / 1000);
+          const finish = launchDelay + rdur;
+          if (finish > maxFinish) maxFinish = finish;
+
+          const sway1 = (Math.random() < 0.5 ? -1 : 1) * (18 + Math.random() * 32);
+          const sway2 = -sway1 * (0.5 + Math.random() * 0.35);
+
+          const floatDur = 3 + Math.random() * 4;
+          const floatDelay = finish + Math.random() * 1.5;
+
+          spawnFlower({
+            x: c.x,
+            y: c.y,
+            size: size,
+            fallDist: fallDist,
+            rdur: rdur,
+            launchDelay: launchDelay,
+            sway1: sway1,
+            sway2: sway2,
+            restRot: restRot,
+            startRot: startRot,
+            floatDur: floatDur,
+            floatDelay: floatDelay
+          }, bloomField);
+        });
+
+        // Exact bore.mp4 timing: Let all flowers complete their descent and float, then part smoothly like a curtain
+        const waitTime = Math.max(3800, (maxFinish * 1000) + 400);
+
+        setTimeout(() => {
+          giftLanding.classList.remove('state-bloom');
+          giftLanding.classList.add('state-curtain');
+
+          const cx = w / 2;
+          const shiftX = w / 2 + 280;
+          const maxDx = Math.max(cx, w - cx) + 200;
+
+          const flowers = bloomField.querySelectorAll('.bloom-flower');
+          flowers.forEach((el) => {
+            const x = parseFloat(el.dataset.x) || cx;
+            const dir = x < cx ? -1 : 1;
+            const dx = Math.abs(x - cx);
+            const edgeFactor = Math.min(1, dx / maxDx);
+            const cdelay = (1 - edgeFactor) * 0.18;
+
+            el.style.setProperty('--cx', dir * shiftX + 'px');
+            el.style.setProperty('--cy', (Math.random() * 50 - 25) + 'px');
+            el.style.setProperty('--cdelay', cdelay.toFixed(2) + 's');
+            el.classList.remove('in');
+          });
+
+          // Force reflow so the transition is 100% buttery smooth
+          void bloomField.offsetWidth;
+
+          flowers.forEach((el) => {
+            el.classList.add('curtain-open');
+          });
+
+          // Cross-fade the gift landing and smoothly reveal the Pink Mac Window
+          setTimeout(() => {
+            giftLanding.style.transition = 'opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
+            giftLanding.style.opacity = '0';
+
+            setTimeout(() => {
+              giftLanding.style.display = 'none';
+              openWhenZone.classList.add('active');
+              requestAnimationFrame(() => {
+                openWhenZone.classList.add('visible');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              });
+            }, 1000);
+          }, 1400);
+
+        }, waitTime);
+      }
+
+      /* ═════════════════════════════════════════════════
+         STAGE 2: AUDIO CONTROLS & MUTE OPTIONS
+      ══════════════════════════════════════════════════ */
+      const SONGS = [
+        { title: 'Yellow ⇄', src: 'Highness.mp4' },
+        { title: 'Acoustic ⇄', src: 'assets/music.mp3' }
+      ];
+      let currentSongIndex = 0;
+      let isAudioMuted = true; // Started muted as requested
+
+      function playAudioSilentlyOrActive() {
+        const audio = document.getElementById('bg-music');
+        if (!audio) return;
+        audio.muted = isAudioMuted;
+        audio.play().catch(() => {});
+        updateAudioUI();
+      }
+
+      function toggleMute() {
+        const audio = document.getElementById('bg-music');
+        if (!audio) return;
+        isAudioMuted = !isAudioMuted;
+        audio.muted = isAudioMuted;
+        if (!isAudioMuted && audio.paused) {
+          audio.play().catch(() => {});
+        }
+        updateAudioUI();
+      }
+
+      function switchSong() {
+        const audio = document.getElementById('bg-music');
+        if (!audio) return;
+        currentSongIndex = (currentSongIndex + 1) % SONGS.length;
+        const song = SONGS[currentSongIndex];
+        audio.src = song.src;
+        audio.muted = isAudioMuted;
+        audio.play().catch(() => {});
+        updateAudioUI();
+      }
+
+      function updateAudioUI() {
+        const icon = document.getElementById('music-icon');
+        const text = document.getElementById('music-status-text');
+        const songTag = document.getElementById('song-title-tag');
+        const audio = document.getElementById('bg-music');
+
+        if (songTag) songTag.textContent = SONGS[currentSongIndex].title;
+        if (isAudioMuted || (audio && audio.muted)) {
+          if (icon) icon.textContent = '🔇';
+          if (text) text.textContent = 'Muted';
+        } else {
+          if (icon) icon.textContent = '🎵';
+          if (text) text.textContent = 'Playing';
+        }
+      }
+
+      /* ═════════════════════════════════════════════════
+         STAGE 3: OPEN WHEN LETTERS (HOTEL ROOM REMOVED)
+      ══════════════════════════════════════════════════ */
+      const LETTERS_DATA = {
+        bored: {
+          title: "Open When: You're Bored 🎲",
+          text: "Hey Highness, if you're bored in your room right now, the Royal Anti-Boredom Court has declared this an official emergency.<br/><br/>You spend so much of your day being capable and composed. Right now, you don't have to be productive. You don't have to have your life figured out before morning.<br/><br/>I built a mini arcade and bubble wrap right below to bring your serotonin back to 100%. Give it a spin!",
+          hasGame: true
+        },
+        overthinking: {
+          title: "Open When: You're Overthinking 🌙",
+          text: "Hi Highness, take a deep breath.<br/><br/>I know your brain loves playing 47 parallel realities simultaneously in 4K resolution while you pretend everything is fine. But for tonight: all overthinking charges are formally dismissed.<br/><br/>Whatever happened today, it doesn't define tomorrow. You are doing so much better than you give yourself credit for. Close your eyes, exhale, and let tonight be easy.",
+          hasGame: false
+        },
+        far: {
+          title: "Open When: You Feel Far From Home 🏰",
+          text: "Being in another city is quiet in a heavy way.<br/><br/>The nights feel a little longer and everything feels slightly unfamiliar. So here is your reminder: distance is temporary, but the people who care about you are constant.<br/><br/>Even miles away, you have someone permanently in your corner. Not going anywhere. No crown required. No reason needed.",
+          hasGame: false
+        },
+        hug: {
+          title: "Open When: You Need a Hug 🫂",
+          text: "Sending you the biggest, warmest virtual hug right across the distance.<br/><br/>The kind where you can just let your shoulders drop, stop trying to be strong for everyone else, and just breathe.<br/><br/>Even queens get to take off the crown. Whenever you need a reminder that someone believes in you, come right back to this note.",
+          hasGame: false
+        },
+        smile: {
+          title: "Open When: You Want to Smile 🌸",
+          text: "Fun fact: scientists spent billions of dollars looking for the most effortlessly charming thing in the galaxy and completely forgot to check your laugh.<br/><br/>You have that rare superpower where just your presence makes an entire room feel warmer. Don't let anyone or any boring day dim that sparkle.",
+          hasGame: false
+        },
+        final: {
+          title: "A Small Royal Promise 📜",
+          text: "If you've made it through these letters, I hope at least one of them made you smile.<br/><br/>I made this for the days I can't be right next to you to tease you or make you laugh. Whenever you feel overwhelmed, tired, or quiet... remember that you never have to carry it all alone.<br/><br/>Always in your corner, Highness.",
+          hasGame: false
+        }
+      };
+
+      function goToStep(stepId) {
+        const steps = ['step-intro', 'step-willyou', 'step-please', 'step-ready', 'step-envelopes', 'step-letter'];
+        steps.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = 'none';
+        });
+
+        const target = document.getElementById('step-' + stepId);
+        if (target) {
+          target.style.display = (stepId === 'letter') ? 'block' : 'flex';
+          if (stepId === 'envelopes') target.style.flexDirection = 'column';
+        }
+      }
+
+      function onNoClick() {
+        goToStep('please');
+      }
+
+      function openEnvelope(key) {
+        const data = LETTERS_DATA[key];
+        if (!data) return;
+
+        const envelopesEl = document.getElementById('step-envelopes');
+        if (envelopesEl) envelopesEl.style.display = 'none';
+
+        const letterView = document.getElementById('step-letter');
+        if (letterView) letterView.style.display = 'block';
+
+        const titleEl = document.getElementById('letterTopic');
+        if (titleEl) titleEl.innerHTML = data.title;
+
+        const textEl = document.getElementById('letterContent');
+        if (textEl) textEl.innerHTML = data.text;
+
+        const gameBox = document.getElementById('letterGameBox');
+        if (data.hasGame) {
+          if (gameBox) gameBox.style.display = 'block';
+          initBubbleGrid();
+          initMemoryGame();
+        } else {
+          if (gameBox) gameBox.style.display = 'none';
+        }
+
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+      }
+
+      function backToEnvelopes() {
+        endLetterGame();
+        const letterView = document.getElementById('step-letter');
+        if (letterView) letterView.style.display = 'none';
+
+        const envelopesEl = document.getElementById('step-envelopes');
+        if (envelopesEl) {
+          envelopesEl.style.display = 'flex';
+          envelopesEl.style.flexDirection = 'column';
+        }
+      }
+
+      /* ═════════════════════════════════════════════════
+         STAGE 4: THE 3 FEEL-GOOD GAMES
+      ══════════════════════════════════════════════════ */
+      function switchGameTab(tab) {
+        const tabs = document.querySelectorAll('.game-tab-btn');
+        tabs.forEach(t => t.classList.remove('active'));
+
+        const panels = document.querySelectorAll('.game-panel');
+        panels.forEach(p => p.classList.remove('active'));
+
+        if (tab === 'catcher') {
+          if (tabs[0]) tabs[0].classList.add('active');
+          const p = document.getElementById('gamePanelCatcher');
+          if (p) p.classList.add('active');
+        } else if (tab === 'memory') {
+          if (tabs[1]) tabs[1].classList.add('active');
+          const p = document.getElementById('gamePanelMemory');
+          if (p) p.classList.add('active');
+          initMemoryGame();
+        } else if (tab === 'bubbles') {
+          if (tabs[2]) tabs[2].classList.add('active');
+          const p = document.getElementById('gamePanelBubbles');
+          if (p) p.classList.add('active');
+          initBubbleGrid();
+        }
+      }
+
+      /* Game 1: Star & Crown Catcher */
+      let owGameInterval = null;
+      let owTimerInterval = null;
+      let owScore = 0;
+      let owTimeLeft = 25;
+
+      const CATCH_ITEMS = [
+        { src: 'assets/stickers/crown.png', pts: 25 },
+        { src: 'assets/flowers/flower-1.png', pts: 15 },
+        { src: 'assets/stickers/heart.png', pts: 20 },
+        { src: 'assets/flowers/flower-2.png', pts: 10 }
+      ];
+
+      function startLetterGame() {
+        const cover = document.getElementById('ow-cover');
+        const arena = document.getElementById('ow-arena');
+        if (cover) cover.style.display = 'none';
+
+        owScore = 0;
+        owTimeLeft = 25;
+        document.getElementById('ow-score').textContent = owScore;
+        document.getElementById('ow-timer').textContent = owTimeLeft;
+
+        clearInterval(owGameInterval);
+        clearInterval(owTimerInterval);
+
+        owTimerInterval = setInterval(() => {
+          owTimeLeft--;
+          document.getElementById('ow-timer').textContent = owTimeLeft;
+          if (owTimeLeft <= 0) {
+            endLetterGame();
+          }
+        }, 1000);
+
+        owGameInterval = setInterval(() => {
+          if (!arena || arena.clientWidth === 0) return;
+          const item = CATCH_ITEMS[Math.floor(Math.random() * CATCH_ITEMS.length)];
+          const target = document.createElement('img');
+          target.src = item.src;
+          target.className = 'ow-target-item';
+          const size = 42 + Math.random() * 16;
+          target.style.width = size + 'px';
+          target.style.height = size + 'px';
+          target.style.position = 'absolute';
+          target.style.cursor = 'pointer';
+          target.style.userSelect = 'none';
+          target.style.transition = 'transform 0.15s ease, opacity 0.15s ease';
+          target.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.18))';
+
+          const maxX = Math.max(20, arena.clientWidth - size - 10);
+          target.style.left = Math.max(6, Math.random() * maxX) + 'px';
+          target.style.top = '-50px';
+
+          let y = -50;
+          const spd = 2.4 + Math.random() * 2.2;
+          const move = setInterval(() => {
+            y += spd;
+            target.style.top = y + 'px';
+            if (y > arena.clientHeight) {
+              clearInterval(move);
+              target.remove();
+            }
+          }, 20);
+
+          const onCatch = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            clearInterval(move);
+            owScore += item.pts;
+            document.getElementById('ow-score').textContent = owScore;
+            target.style.transform = 'scale(1.4) rotate(15deg)';
+            target.style.opacity = '0';
+            setTimeout(() => target.remove(), 160);
+          };
+
+          target.addEventListener('mousedown', onCatch);
+          target.addEventListener('touchstart', onCatch, { passive: false });
+          arena.appendChild(target);
+        }, 500);
+      }
+
+      function endLetterGame() {
+        clearInterval(owGameInterval);
+        clearInterval(owTimerInterval);
+        const cover = document.getElementById('ow-cover');
+        const arena = document.getElementById('ow-arena');
+        if (arena) {
+          arena.querySelectorAll('.ow-target-item').forEach(el => el.remove());
+        }
+        if (cover) {
+          cover.style.display = 'flex';
+          cover.innerHTML = `
+            <img src="assets/stickers/clean_bears_yay.png" style="height:65px; width:auto; margin-bottom:6px;" alt="" />
+            <div style="font-family:'Caveat',cursive; font-size:1.6rem; color:#800000; font-weight:700;">Score: ` + owScore + ` ✨</div>
+            <p style="font-size:0.75rem; color:#8b3a55; margin:2px 0 8px;">Royal serotonin replenished!</p>
+            <button class="ow-pill-btn" onclick="startLetterGame()" style="font-size:0.95rem; padding:4px 20px;">Play Again ↺</button>
+          `;
+        }
+      }
+
+      /* Game 2: Memory Match */
+      const MEM_OBJECTS = [
+        'assets/stickers/crown.png',
+        'assets/flowers/flower-1.png',
+        'assets/flowers/flower-2.png',
+        'assets/stickers/heart.png',
+        'assets/photos/rose.png',
+        'assets/flowers/flower-3.png'
+      ];
+      let memTiles = [];
+      let memFlipped = [];
+      let memMatchedCount = 0;
+
+      function initMemoryGame() {
+        const grid = document.getElementById('memoryGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        memFlipped = [];
+        memMatchedCount = 0;
+
+        memTiles = [...MEM_OBJECTS, ...MEM_OBJECTS].sort(() => Math.random() - 0.5);
+        memTiles.forEach((src) => {
+          const tile = document.createElement('div');
+          tile.className = 'mem-tile';
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = '';
+          tile.appendChild(img);
+          tile.dataset.src = src;
+
+          tile.onclick = () => onTileTap(tile);
+          grid.appendChild(tile);
+        });
+      }
+
+      function onTileTap(tile) {
+        if (memFlipped.length >= 2 || tile.classList.contains('revealed') || tile.classList.contains('matched')) return;
+
+        tile.classList.add('revealed');
+        memFlipped.push(tile);
+
+        if (memFlipped.length === 2) {
+          const [t1, t2] = memFlipped;
+          if (t1.dataset.src === t2.dataset.src) {
+            t1.classList.add('matched');
+            t2.classList.add('matched');
+            memFlipped = [];
+            memMatchedCount++;
+            if (memMatchedCount === MEM_OBJECTS.length) {
+              setTimeout(() => {
+                alert('👑 You matched all royal pairs! Brilliant memory, Highness! ✨');
+              }, 300);
+            }
+          } else {
+            setTimeout(() => {
+              t1.classList.remove('revealed');
+              t2.classList.remove('revealed');
+              memFlipped = [];
+            }, 550);
+          }
+        }
+      }
+
+      /* Game 3: Bubble Wrap */
+      function initBubbleGrid() {
+        const wrap = document.getElementById('ow-bubbles');
+        if (!wrap) return;
+        wrap.innerHTML = '';
+        for (let i = 0; i < 12; i++) {
+          const b = document.createElement('div');
+          b.className = 'bubble-pearl';
+          b.textContent = '🫧';
+          b.onclick = () => {
+            b.classList.add('popped');
+            b.textContent = '✨';
+            b.style.transform = 'scale(1.18)';
+            setTimeout(() => { b.style.transform = 'scale(0.92)'; }, 140);
+          };
+          wrap.appendChild(b);
+        }
+      }
+
+      /* ═════════════════════════════════════════════════
+         STAGE 5: INITIALIZATION & EVENT BINDINGS
+      ══════════════════════════════════════════════════ */
+      document.addEventListener('DOMContentLoaded', () => {
+        // Gift box click
+        const giftBtn = document.getElementById('gift-box-btn');
+        if (giftBtn) {
+          giftBtn.addEventListener('click', startGiftCascade);
+        }
+
+        // Music Mute Button
+        const muteBtn = document.getElementById('mute-btn');
+        if (muteBtn) {
+          muteBtn.addEventListener('click', toggleMute);
+        }
+
+        // Song Switch Button
+        const songBtn = document.getElementById('song-switch-btn');
+        if (songBtn) {
+          songBtn.addEventListener('click', switchSong);
+        }
+
+        // Initialize UI states
+        updateAudioUI();
+      });
+    </script>
+  </body>
+</html>
