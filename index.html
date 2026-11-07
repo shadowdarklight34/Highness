@@ -145,13 +145,13 @@
 
       /* Torn Paper Card in Center */
       .paper-card {
-        width: 100%;
-        max-width: 480px;
+        width: 94%;
+        max-width: 420px;
         background: #fffdfd;
         border: 2px dashed rgba(255, 143, 177, 0.65);
-        border-radius: 22px;
-        box-shadow: 0 10px 30px rgba(180, 50, 90, 0.1);
-        padding: 24px 16px 22px;
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(180, 50, 90, 0.08);
+        padding: 22px 14px 20px;
         box-sizing: border-box;
         text-align: center;
         display: flex;
@@ -159,34 +159,38 @@
         align-items: center;
         justify-content: center;
         position: relative;
-        min-height: 250px;
+        min-height: 220px;
+        margin: 10px auto;
         overflow: visible;
         transition: opacity 0.35s ease, transform 0.35s ease;
       }
 
       .paper-script-heading {
         font-family: 'Dancing Script', cursive;
-        font-size: clamp(1.85rem, 5.6vw, 2.7rem);
+        font-size: clamp(1.6rem, 5.2vw, 2.35rem);
         color: #9c2e4f;
         margin: 0 0 10px;
         line-height: 1.25;
-        padding: 4px 18px;
+        padding: 4px 10px;
+        text-align: center;
+        width: 100%;
         overflow: visible;
+        word-wrap: break-word;
         box-sizing: border-box;
       }
 
       /* Live Object Characters (Replaced raw emojis) */
       .live-character-box {
-        margin: 10px 0 16px;
+        margin: 6px 0 14px;
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 95px;
+        min-height: 85px;
       }
       .live-character-img {
-        max-height: 105px;
+        max-height: 95px;
         width: auto;
-        filter: drop-shadow(0 6px 14px rgba(180, 50, 90, 0.15));
+        filter: drop-shadow(0 4px 10px rgba(180, 50, 90, 0.12));
         transition: transform 0.25s ease;
       }
       .live-character-img:hover {
@@ -787,8 +791,8 @@
         const w = window.innerWidth;
         const h = window.innerHeight;
         const isMobile = Math.min(w, h) < 640;
-        const desiredCount = isMobile ? 180 : 340;
-        const hardCap = isMobile ? 240 : 480;
+        const desiredCount = isMobile ? 120 : 220;
+        const hardCap = isMobile ? 160 : 320;
         const rainWindow = isMobile ? 2200 : 2800;
         const speedMin = isMobile ? 210 : 240;
         const speedRange = isMobile ? 90 : 130;
