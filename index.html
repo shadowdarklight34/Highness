@@ -329,6 +329,30 @@
       .letter-back-btn:active {
         background: #ffd3e0;
       }
+            .poetry-card {
+        background: linear-gradient(135deg, rgba(255, 245, 248, 0.96), rgba(255, 235, 242, 0.94));
+        border: 1.5px solid #e8a5b8;
+        border-radius: 14px;
+        padding: 16px 18px;
+        margin: 0 0 16px;
+        box-shadow: 0 4px 14px rgba(180, 50, 80, 0.08);
+        text-align: center;
+      }
+      .poetry-title {
+        font-family: 'Dancing Script', cursive;
+        font-size: 1.85rem;
+        font-weight: 700;
+        color: #8b2844;
+        margin: 0 0 10px;
+        letter-spacing: 0.5px;
+      }
+      .poetry-body {
+        font-family: 'Caveat', cursive;
+        font-size: 1.35rem;
+        line-height: 1.65;
+        color: #521828;
+        margin: 0;
+      }
       .letter-prose {
         font-family: 'Caveat', cursive;
         font-size: 1.35rem;
@@ -909,9 +933,7 @@
       ══════════════════════════════════════════════════ */
       const SONGS = [
         { title: 'Aise Kaise Jaane Doon ⇄', src: 'assets/aise_kaise_jaane_doon.mp3' },
-        { title: 'Jaan Ho Meri ⇄', src: 'assets/jaan_ho_meri.mp3' },
-        { title: 'Flower (Johnny Stimson) ⇄', src: 'assets/flower_stimson.mp3' },
-        { title: 'Acoustic ⇄', src: 'assets/music.mp3' }
+        { title: 'Flower (Johnny Stimson) ⇄', src: 'assets/flower_stimson.mp3' }
       ];
       let currentSongIndex = 0;
       let isAudioMuted = true; // Started muted as requested
@@ -968,7 +990,16 @@
       const LETTERS_DATA = {
         bored: {
           title: "Open When: You're Bored 🎲",
-          text: "Hey Highness, if you're bored in your room right now, the Royal Anti-Boredom Court has declared this an official emergency.<br/><br/>You spend so much of your day being capable and composed. Right now, you don't have to be productive. You don't have to have your life figured out before morning.<br/><br/>I built a mini arcade and bubble wrap right below to bring your serotonin back to 100%. Give it a spin!",
+          text: `<div class="poetry-card">
+              <p class="poetry-title">Aapse bore??</p>
+              <p class="poetry-body">
+                Aap se bore ho jayein? Yeh toh socha bhi nahi ja sakta,<br/>
+                Aap woh sukoon ho jise paane ke baad kisi aur ki talash hi nahi rehti.<br/>
+                Subah ki pehli subah aur raat ka aakhri khayal bas aap hi ho,<br/>
+                Aur sach kahein toh... aapke samne aane ke baad lafaz khud-b-khud thahar jaate hain, bas aapko dekhte rehne ka dil karta hai. ✨
+              </p>
+            </div>
+            Hey Highness, boredom officially stands zero chance in your presence! Right below is your personal feel-good arcade and stress-buster bubble wrap whenever you need a quick break. Give it a spin!`,
           hasGame: true
         },
         overthinking: {
